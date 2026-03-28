@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  jobRoles JobRole[]
+}
+
+model JobRole {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  difficulty  String
+  duration    Int
+  createdAt   DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  questions   TestQuestion[]
+  candidates  Candidate[]
+  invitations Invitation[]
+}
+
+model TestQuestion {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+
+  jobRoleId String
+  jobRole   JobRole @relation(fields: [jobRoleId], references: [id])
+}
+
+model Candidate {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  resumeUrl String?
+  createdAt DateTime @default(now())
+
+  jobRoleId String
+  jobRole   JobRole @relation(fields: [jobRoleId], references: [id])
+
+  interviews  Interview[]
+  invitations Invitation[]
+}
+
+model Interview {
+  id        String   @id @default(uuid())
+  startedAt DateTime @default(now())
+  completed Boolean  @default(false)
+
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+
+  questions InterviewQuestion[]
+
+  report Report?
+}
+
+model InterviewQuestion {
+  id         String @id @default(uuid())
+  question   String
+  difficulty String
+
+  interviewId String
+  interview   Interview @relation(fields: [interviewId], references: [id])
+
+  answer Answer?
+}
+
+model Answer {
+  id       String  @id @default(uuid())
+  text     String
+  score    Int
+  feedback String?
+
+  questionId String            @unique
+  question   InterviewQuestion @relation(fields: [questionId], references: [id])
+}
+
+model Report {
+  id             String   @id @default(uuid())
+  summary        String
+  avgScore       Int
+  strengths      String[]
+  weaknesses     String[]
+  recommendation String
+  skills         Json?
+  createdAt      DateTime @default(now()) // ⭐ add this
+
+  interviewId String @unique
+  interview   Interview @relation(fields: [interviewId], references: [id])
+}
+
+model Invitation {
+  id          String     @id @default(uuid())
+  token       String     @unique
+  email       String
+  expiresAt   DateTime
+
+  candidateId String?
+  candidate   Candidate? @relation(fields: [candidateId], references: [id])
+
+  // ✅ ADD THIS
+  jobRoleId String
+  jobRole   JobRole @relation(fields: [jobRoleId], references: [id])
+}
