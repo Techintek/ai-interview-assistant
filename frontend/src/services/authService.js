@@ -1,8 +1,8 @@
-const API_URL = "http://localhost:5001/api/auth"
+const API_BASE = import.meta.env.VITE_API_URL
 
 export const authService = {
   async signInInterviewer(email, password) {
-    const res = await fetch(`${API_URL}/login`, {
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -16,16 +16,16 @@ export const authService = {
       throw new Error(data.error || "Login failed")
     }
 
-    // ✅ STORE USER OBJECT (IMPORTANT)
+    // ✅ store token properly
     if (data.token) {
-      localStorage.setItem("user", JSON.stringify({ token: data.token }))
+      localStorage.setItem("token", data.token)
     }
 
     return data
   },
 
   async signUpInterviewer(name, email, password) {
-    const res = await fetch(`${API_URL}/register`, {
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -43,6 +43,6 @@ export const authService = {
   },
 
   logout() {
-    localStorage.removeItem("user")
+    localStorage.removeItem("token")
   }
 }
