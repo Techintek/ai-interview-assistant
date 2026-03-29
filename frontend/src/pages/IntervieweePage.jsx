@@ -1,32 +1,35 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { motion } from "framer-motion"
+import { apiFetch } from "../lib/api" // ✅ ADD THIS
 
 export const IntervieweePage = () => {
   const { token } = useParams()
 
-  const [stage, setStage] = useState("loading") // loading | error | ready | interview | completed
+  const [stage, setStage] = useState("loading")
   const [questions, setQuestions] = useState([])
   const [currentQ, setCurrentQ] = useState(0)
   const [answer, setAnswer] = useState("")
   const [answers, setAnswers] = useState([])
   const [timeLeft, setTimeLeft] = useState(60)
 
-  // ✅ Fetch interview
+  // ✅ Fetch interview (FIXED)
   useEffect(() => {
     const fetchInterview = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/interview/${token}`)
+        const res = await apiFetch(`/api/interview/${token}`)
 
         if (!res.ok) {
           setStage("error")
           return
         }
+
         const data = await res.json()
 
         setQuestions(data.jobRole.questions)
         setStage("ready")
-      } catch {
+      } catch (err) {
+        console.error(err)
         setStage("error")
       }
     }
@@ -55,12 +58,37 @@ export const IntervieweePage = () => {
     const updated = [...answers, answer]
     setAnswers(updated)
     setAnswer("")
-  
+
     if (currentQ < questions.length - 1) {
       setCurrentQ(currentQ + 1)
       setTimeLeft(60)
     } else {
       await submitInterview(updated)
+    }
+  }
+
+  const submitInterview = async (finalAnswers) => {
+    try {
+      setStage("loading")
+
+      const res = await apiFetch("/api/interview/submit", {
+        method: "POST",
+        body: JSON.stringify({
+          token,
+          answers: finalAnswers
+        })
+      })
+
+      if (!res.ok) throw new Error()
+
+      const data = await res.json()
+
+      console.log("Final Score:", data.avgScore)
+
+      setStage("completed")
+    } catch (err) {
+      console.error(err)
+      setStage("error")
     }
   }
 
@@ -99,33 +127,6 @@ export const IntervieweePage = () => {
       </div>
     )
   }
-  const submitInterview = async (finalAnswers) => {
-    try {
-      setStage("loading")
-  
-      const res = await apiFetch("/api/interview/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          token,
-          answers: finalAnswers
-        })
-      })
-  
-      if (!res.ok) throw new Error()
-  
-      const data = await res.json()
-  
-      console.log("Final Score:", data.avgScore)
-  
-      setStage("completed")
-    } catch (err) {
-      console.error(err)
-      setStage("error")
-    }
-  }
 
   if (stage === "completed") {
     return (
@@ -146,7 +147,6 @@ export const IntervieweePage = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-card p-8 rounded-xl w-full max-w-2xl"
       >
-        {/* Progress */}
         <div className="mb-4 flex justify-between text-sm">
           <span>
             Question {currentQ + 1} / {questions.length}
@@ -154,10 +154,8 @@ export const IntervieweePage = () => {
           <span className="text-red-500">{timeLeft}s</span>
         </div>
 
-        {/* Question */}
         <h2 className="text-lg mb-6">{q.question}</h2>
 
-        {/* Answer */}
         <textarea
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
