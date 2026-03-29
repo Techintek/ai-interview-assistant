@@ -8,10 +8,10 @@ export const RecruiterDashboard = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const res = await fetch("http://localhost:5001/api/reports")
-      const data = await res.json()
-      setReports(data)
-      setLoading(false)
+        const res = await apiFetch("/api/reports")
+        const data = await res.json()
+        setReports(data)
+        setLoading(false)
     }
 
     fetchReports()

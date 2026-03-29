@@ -103,7 +103,7 @@ export const IntervieweePage = () => {
     try {
       setStage("loading")
   
-      const res = await fetch("http://localhost:5001/api/interview/submit", {
+      const res = await apiFetch("/api/interview/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

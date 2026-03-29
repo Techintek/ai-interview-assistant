@@ -1,10 +1,9 @@
 import toast from "react-hot-toast"
 
-const API_URL = "http://localhost:5001"
+const API_URL = import.meta.env.VITE_API_URL
 
 export const apiFetch = async (url, options = {}) => {
-  const user = JSON.parse(localStorage.getItem("user"))
-  const token = user?.token
+  const token = localStorage.getItem("token")
 
   const res = await fetch(`${API_URL}${url}`, {
     ...options,
@@ -15,11 +14,9 @@ export const apiFetch = async (url, options = {}) => {
     }
   })
 
-  // 🔥 AUTO LOGOUT
   if (res.status === 401) {
     toast.error("Session expired. Please login again.")
-
-    localStorage.removeItem("user")
+    localStorage.removeItem("token")
 
     setTimeout(() => {
       window.location.href = "/login"
