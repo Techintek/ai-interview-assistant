@@ -6,7 +6,40 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash"
 })
+// ---------------- GET INTERVIEW BY TOKEN ----------------
+export const getInterviewByToken = async (req, res) => {
+  try {
+    const { token } = req.params
 
+    const invitation = await prisma.invitation.findUnique({
+      where: { token },
+      include: {
+        jobRole: {
+          include: {
+            questions: true
+          }
+        }
+      }
+    })
+
+    if (!invitation) {
+      return res.status(404).json({ error: "Invalid token" })
+    }
+
+    // optional: expiry check
+    if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
+      return res.status(400).json({ error: "Link expired" })
+    }
+
+    res.json({
+      jobRole: invitation.jobRole
+    })
+
+  } catch (error) {
+    console.error("GET INTERVIEW ERROR:", error)
+    res.status(500).json({ error: "Failed to load interview" })
+  }
+}
 // ---------------- SUBMIT INTERVIEW ----------------
 export const submitInterview = async (req, res) => {
   try {
