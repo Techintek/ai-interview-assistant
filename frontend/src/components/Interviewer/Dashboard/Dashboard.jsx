@@ -33,7 +33,6 @@ export const Dashboard = () => {
     fetchData()
   }, [])
 
-  // 🔥 FILTER + SORT
   const filteredReports = (reports || [])
     .filter((r) =>
       r?.interview?.candidate?.email
@@ -46,19 +45,17 @@ export const Dashboard = () => {
     })
 
   if (loading) {
-    return (
-      <DashboardLayout>
-        <p>Loading...</p>
-      </DashboardLayout>
-    )
+    return <DashboardLayout><p>Loading...</p></DashboardLayout>
   }
 
   return (
     <DashboardLayout>
-      <h1 className="text-3xl font-bold mb-8">Analytics</h1>
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8">
+        Analytics
+      </h1>
 
       {/* STATS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-card p-6 rounded-xl">
           <p className="text-muted-foreground">Total Interviews</p>
           <h2 className="text-2xl font-bold">
@@ -75,16 +72,16 @@ export const Dashboard = () => {
       </div>
 
       {/* FILTER */}
-      <div className="mt-10 flex gap-4">
+      <div className="mt-10 flex flex-col sm:flex-row gap-4">
         <input
           placeholder="Search by email..."
-          className="p-2 border rounded w-full max-w-sm"
+          className="p-2 border rounded w-full sm:max-w-sm"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
-          className="p-2 border rounded"
+          className="p-2 border rounded w-full sm:w-auto"
           value={sort}
           onChange={(e) => setSort(e.target.value)}
         >
@@ -102,18 +99,18 @@ export const Dashboard = () => {
         {filteredReports.map((r) => (
           <div
             key={r.id}
-            onClick={() => navigate(`/reports/${r.id}`)} // ✅ CLICK HERE
+            onClick={() => navigate(`/reports/${r.id}`)}
             className="bg-card p-5 rounded-xl border cursor-pointer hover:bg-secondary transition"
           >
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <div>
                 <p className="text-sm text-muted-foreground">Candidate</p>
-                <p className="font-semibold">
+                <p className="font-semibold break-words">
                   {r.interview?.candidate?.email}
                 </p>
               </div>
 
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <p className="text-sm text-muted-foreground">Score</p>
                 <p className="text-xl font-bold text-primary">
                   {r.avgScore}

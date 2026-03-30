@@ -142,34 +142,34 @@ export const IntervieweePage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-card p-8 rounded-xl w-full max-w-2xl"
-      >
-        <div className="mb-4 flex justify-between text-sm">
-          <span>
-            Question {currentQ + 1} / {questions.length}
-          </span>
-          <span className="text-red-500">{timeLeft}s</span>
-        </div>
+      // Only showing changed UI part
 
-        <h2 className="text-lg mb-6">{q.question}</h2>
+<motion.div
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  className="bg-card p-4 sm:p-6 md:p-8 rounded-xl w-full max-w-xl sm:max-w-2xl"
+>
+  <div className="mb-4 flex justify-between text-sm">
+    <span>Question {currentQ + 1} / {questions.length}</span>
+    <span className="text-red-500">{timeLeft}s</span>
+  </div>
 
-        <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          className="w-full p-3 border rounded mb-4"
-          rows={5}
-        />
+  <h2 className="text-base sm:text-lg mb-6">{q.question}</h2>
 
-        <button
-          onClick={handleNext}
-          className="bg-blue-500 text-white px-6 py-2 rounded"
-        >
-          {currentQ === questions.length - 1 ? "Finish" : "Next"}
-        </button>
-      </motion.div>
+  <textarea
+    value={answer}
+    onChange={(e) => setAnswer(e.target.value)}
+    className="w-full p-3 border rounded mb-4 text-sm sm:text-base"
+    rows={5}
+  />
+
+  <button
+    onClick={handleNext}
+    className="w-full sm:w-auto bg-blue-500 text-white px-6 py-2 rounded"
+  >
+    {currentQ === questions.length - 1 ? "Finish" : "Next"}
+  </button>
+</motion.div>
     </div>
   )
 }
