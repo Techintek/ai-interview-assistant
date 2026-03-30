@@ -7,6 +7,7 @@ const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash"
 })
 // ---------------- GET INTERVIEW BY TOKEN ----------------
+// ---------------- GET INTERVIEW BY TOKEN ----------------
 export const getInterviewByToken = async (req, res) => {
   try {
     const { token } = req.params
