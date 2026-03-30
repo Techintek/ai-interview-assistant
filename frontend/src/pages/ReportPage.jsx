@@ -42,7 +42,27 @@ export const ReportPage = () => {
   }, [id])
 
   if (loading) {
-    return <DashboardLayout><p>Loading report...</p></DashboardLayout>
+    return (
+      <DashboardLayout>
+        <div className="space-y-6 animate-pulse">
+  
+          <div className="h-8 w-1/3 bg-card rounded" />
+  
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="h-40 bg-card rounded-2xl" />
+            <div className="h-40 bg-card rounded-2xl" />
+          </div>
+  
+          <div className="h-32 bg-card rounded-2xl" />
+  
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="h-24 bg-card rounded-xl" />
+            <div className="h-24 bg-card rounded-xl" />
+          </div>
+  
+        </div>
+      </DashboardLayout>
+    )
   }
 
   if (!report) {

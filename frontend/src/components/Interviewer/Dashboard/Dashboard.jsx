@@ -44,9 +44,30 @@ export const Dashboard = () => {
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
 
-  if (loading) {
-    return <DashboardLayout><p>Loading...</p></DashboardLayout>
-  }
+    if (loading) {
+      return (
+        <DashboardLayout>
+          <div className="space-y-6 animate-pulse">
+    
+            {/* STATS */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-20 bg-card rounded-xl" />
+              ))}
+            </div>
+    
+            {/* SEARCH */}
+            <div className="h-10 bg-card rounded w-1/3" />
+    
+            {/* LIST */}
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-card rounded-xl" />
+            ))}
+    
+          </div>
+        </DashboardLayout>
+      )
+    }
 
   return (
     <DashboardLayout>
