@@ -12,12 +12,21 @@ dotenv.config()
 
 const app = express()
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ai-interview-assistant-sable-one.vercel.app"
+]
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://ai-interview-assistant-agovsjim-taksh884be22-2374s-projects.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true)
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
   credentials: true
 }))
 app.use(express.json())
