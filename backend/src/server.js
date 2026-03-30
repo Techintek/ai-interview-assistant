@@ -12,6 +12,8 @@ dotenv.config()
 
 const app = express()
 
+import cors from "cors"
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://ai-interview-assistant-sable-one.vercel.app"
