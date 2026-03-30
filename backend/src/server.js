@@ -16,7 +16,7 @@ const app = express()
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://ai-interview-assistant.vercel.app"
+    "https://ai-interview-assistant-agovsjim-taksh884be22-2374s-projects.vercel.app"
   ],
   credentials: true
 }))
